@@ -6,7 +6,7 @@ Personal website for Muhammad Saad Sohail.
 
 - `index.html` — Landing page
 - `about/index.html` — Profile / about page
-- `favicon.svg` / `symbol.svg` — Brand assets
+- `assets/` — Brand assets (favicon, symbol SVGs)
 
 ## Deployment
 
