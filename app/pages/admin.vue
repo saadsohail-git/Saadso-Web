@@ -1,37 +1,73 @@
 <template>
   <div class="admin-page">
-    <div class="admin-header">
-      <h1>Write</h1>
-      <div class="admin-actions">
-        <button class="btn" @click="copyMarkdown">{{ copied ? 'Copied!' : 'Copy Markdown' }}</button>
-        <NuxtLink to="/blog" class="btn btn-ghost">Blog</NuxtLink>
-      </div>
-    </div>
-
-    <div class="slug-row">
-      <label>content/blog/</label>
-      <input v-model="slug" placeholder="my-post-slug" class="slug-input" />
-      <label>.md</label>
-    </div>
-
-    <div class="editor-layout">
-      <div class="editor-pane">
-        <div class="pane-label">Markdown</div>
-        <textarea
-          v-model="markdown"
-          placeholder="Start writing..."
-          spellcheck="false"
+    <!-- Password gate -->
+    <div v-if="!authenticated" class="auth-gate">
+      <h1>Admin</h1>
+      <div class="auth-form">
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          class="auth-input"
+          @keyup.enter="authenticate"
         />
+        <button class="btn" @click="authenticate">Enter</button>
       </div>
-      <div class="preview-pane">
-        <div class="pane-label">Preview</div>
-        <div class="prose preview-content" v-html="renderedHtml" />
-      </div>
+      <p v-if="authError" class="error-msg">Wrong password</p>
     </div>
 
-    <p class="hint">
-      Save as <code>content/blog/{{ slug || 'your-slug' }}.md</code>, commit, push. Auto-deploys.
-    </p>
+    <!-- Editor -->
+    <div v-else>
+      <div class="admin-header">
+        <h1>Write</h1>
+        <div class="admin-actions">
+          <button class="btn btn-publish" :disabled="publishing" @click="publish">
+            {{ publishing ? 'Publishing...' : 'Publish' }}
+          </button>
+          <button class="btn btn-ghost" @click="copyMarkdown">{{ copied ? 'Copied!' : 'Copy MD' }}</button>
+          <NuxtLink to="/blog" class="btn btn-ghost">Blog</NuxtLink>
+        </div>
+      </div>
+
+      <p v-if="statusMsg" :class="['status-msg', statusOk ? 'status-ok' : 'status-err']">{{ statusMsg }}</p>
+
+      <div class="meta-row">
+        <div class="meta-field">
+          <label>Title</label>
+          <input v-model="title" placeholder="My Post Title" />
+        </div>
+        <div class="meta-field">
+          <label>Slug</label>
+          <input v-model="slug" placeholder="my-post-slug" />
+        </div>
+        <div class="meta-field">
+          <label>Date</label>
+          <input v-model="date" type="date" />
+        </div>
+      </div>
+
+      <div class="meta-row">
+        <div class="meta-field full">
+          <label>Description</label>
+          <input v-model="description" placeholder="A short summary of the post" />
+        </div>
+      </div>
+
+      <div class="editor-layout">
+        <div class="editor-pane">
+          <div class="pane-label">Markdown</div>
+          <textarea
+            v-model="content"
+            placeholder="Start writing..."
+            spellcheck="false"
+          />
+        </div>
+        <div class="preview-pane">
+          <div class="pane-label">Preview</div>
+          <div class="prose preview-content" v-html="renderedHtml" />
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -40,28 +76,92 @@ import { marked } from 'marked'
 
 useHead({ title: 'Admin — saadso.com' })
 
-const slug = ref('my-post')
+// Auth state
+const password = ref('')
+const authenticated = ref(false)
+const authError = ref(false)
+
+// Post fields
+const title = ref('')
+const slug = ref('')
+const description = ref('')
+const date = ref(new Date().toISOString().split('T')[0])
+const content = ref('')
+
+// UI state
+const publishing = ref(false)
 const copied = ref(false)
+const statusMsg = ref('')
+const statusOk = ref(true)
 
-const defaultFrontmatter = `---
-title: My Post Title
-description: A short description of this post.
-date: '${new Date().toISOString().split('T')[0]}'
-tags: []
----
-
-`
-
-const markdown = ref(defaultFrontmatter)
-
-const renderedHtml = computed(() => {
-  // Strip frontmatter before rendering preview
-  const content = markdown.value.replace(/^---[\s\S]*?---\n*/, '')
-  return marked.parse(content)
+// Auto-generate slug from title
+watch(title, (val) => {
+  if (val) {
+    slug.value = val
+      .toLowerCase()
+      .replace(/[^a-z0-9\s-]/g, '')
+      .replace(/\s+/g, '-')
+      .replace(/-+/g, '-')
+      .trim()
+  }
 })
 
+const renderedHtml = computed(() => {
+  return marked.parse(content.value || '')
+})
+
+function authenticate() {
+  // We'll verify the password server-side on publish.
+  // For the gate, just store it and let them in.
+  // The real check happens when they try to publish.
+  if (password.value) {
+    authenticated.value = true
+    authError.value = false
+  }
+}
+
+async function publish() {
+  if (!slug.value || !title.value || !content.value) {
+    statusMsg.value = 'Fill in title, slug, and content'
+    statusOk.value = false
+    return
+  }
+
+  publishing.value = true
+  statusMsg.value = ''
+
+  try {
+    const res = await $fetch('/api/blog', {
+      method: 'POST',
+      body: {
+        password: password.value,
+        slug: slug.value,
+        title: title.value,
+        description: description.value,
+        date: date.value,
+        tags: [],
+        content: content.value,
+      },
+    })
+
+    statusMsg.value = `Published! → /blog/${slug.value}`
+    statusOk.value = true
+  } catch (err) {
+    if (err?.statusCode === 401) {
+      statusMsg.value = 'Wrong password'
+      authenticated.value = false
+    } else {
+      statusMsg.value = err?.statusMessage || 'Failed to publish'
+    }
+    statusOk.value = false
+  } finally {
+    publishing.value = false
+  }
+}
+
 function copyMarkdown() {
-  navigator.clipboard.writeText(markdown.value)
+  const frontmatter = `---\ntitle: ${title.value}\ndescription: ${description.value}\ndate: '${date.value}'\ntags: []\n---\n\n`
+  navigator.clipboard.writeText(frontmatter + content.value)
   copied.value = true
   setTimeout(() => { copied.value = false }, 2000)
 }
@@ -77,25 +177,120 @@ function copyMarkdown() {
   z-index: 1;
 }
 
+/* Auth gate */
+.auth-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+}
+.auth-gate h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.02em;
+}
+.auth-form {
+  display: flex;
+  gap: 0.5rem;
+}
+.auth-input {
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem;
+  background: transparent;
+  border: 1px solid rgba(184, 169, 217, 0.3);
+  border-radius: 4px;
+  color: var(--ink);
+  padding: 0.5rem 0.8rem;
+  outline: none;
+  width: 200px;
+  transition: border-color 0.2s ease;
+}
+.auth-input:focus {
+  border-color: var(--lilac);
+}
+.error-msg {
+  font-size: 0.58rem;
+  color: #e57373;
+  letter-spacing: 0.08em;
+}
+
+/* Header */
 .admin-header {
   display: flex;
   align-items: baseline;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 }
-
 .admin-header h1 {
   font-family: 'Cormorant Garamond', serif;
   font-weight: 300;
   font-size: clamp(1.8rem, 4vw, 2.4rem);
   letter-spacing: -0.02em;
 }
-
 .admin-actions {
   display: flex;
-  gap: 0.6rem;
+  gap: 0.5rem;
 }
 
+/* Status message */
+.status-msg {
+  font-size: 0.58rem;
+  letter-spacing: 0.08em;
+  margin-bottom: 1rem;
+  padding: 0.5rem 0.8rem;
+  border-radius: 4px;
+}
+.status-ok {
+  color: #81c784;
+  background: rgba(129, 199, 132, 0.08);
+  border: 1px solid rgba(129, 199, 132, 0.2);
+}
+.status-err {
+  color: #e57373;
+  background: rgba(229, 115, 115, 0.08);
+  border: 1px solid rgba(229, 115, 115, 0.2);
+}
+
+/* Meta fields */
+.meta-row {
+  display: flex;
+  gap: 1rem;
+  margin-bottom: 0.8rem;
+}
+.meta-field {
+  flex: 1;
+}
+.meta-field.full {
+  flex: 1 1 100%;
+}
+.meta-field label {
+  display: block;
+  font-size: 0.52rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--muted);
+  margin-bottom: 0.3rem;
+}
+.meta-field input {
+  width: 100%;
+  font-family: 'Geist Mono', monospace;
+  font-size: 0.65rem;
+  background: transparent;
+  border: 1px solid rgba(184, 169, 217, 0.2);
+  border-radius: 4px;
+  color: var(--ink);
+  padding: 0.45rem 0.6rem;
+  outline: none;
+  transition: border-color 0.2s ease;
+}
+.meta-field input:focus {
+  border-color: var(--lilac);
+}
+
+/* Buttons */
 .btn {
   font-family: 'Geist Mono', monospace;
   font-size: 0.58rem;
@@ -112,8 +307,12 @@ function copyMarkdown() {
   display: inline-flex;
   align-items: center;
 }
-.btn:hover {
+.btn:hover { background: rgba(184, 169, 217, 0.2); }
+.btn:disabled { opacity: 0.5; cursor: wait; }
+
+.btn-publish {
   background: rgba(184, 169, 217, 0.2);
+  font-weight: 600;
 }
 
 .btn-ghost {
@@ -125,39 +324,13 @@ function copyMarkdown() {
   border-color: var(--lilac);
 }
 
-.slug-row {
-  display: flex;
-  align-items: center;
-  gap: 0;
-  margin-bottom: 1.2rem;
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.62rem;
-  color: var(--muted);
-}
-
-.slug-input {
-  font-family: 'Geist Mono', monospace;
-  font-size: 0.62rem;
-  background: transparent;
-  border: none;
-  border-bottom: 1px solid rgba(184, 169, 217, 0.3);
-  color: var(--ink);
-  padding: 0.3rem 0.3rem;
-  outline: none;
-  width: 200px;
-  transition: border-color 0.2s ease;
-}
-.slug-input:focus {
-  border-color: var(--lilac);
-}
-
+/* Editor */
 .editor-layout {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 1rem;
-  min-height: 60vh;
+  min-height: 55vh;
 }
-
 .pane-label {
   font-size: 0.52rem;
   letter-spacing: 0.14em;
@@ -165,11 +338,10 @@ function copyMarkdown() {
   color: var(--muted);
   margin-bottom: 0.5rem;
 }
-
 .editor-pane textarea {
   width: 100%;
   height: calc(100% - 1.5rem);
-  min-height: 50vh;
+  min-height: 45vh;
   font-family: 'Geist Mono', monospace;
   font-size: 0.7rem;
   line-height: 1.7;
@@ -185,14 +357,10 @@ function copyMarkdown() {
 .editor-pane textarea:focus {
   border-color: rgba(184, 169, 217, 0.3);
 }
-
-.preview-pane {
-  overflow: hidden;
-}
-
+.preview-pane { overflow: hidden; }
 .preview-content {
   height: calc(100% - 1.5rem);
-  min-height: 50vh;
+  min-height: 45vh;
   background: rgba(184, 169, 217, 0.03);
   border: 1px solid rgba(184, 169, 217, 0.08);
   border-radius: 6px;
@@ -200,23 +368,8 @@ function copyMarkdown() {
   overflow-y: auto;
 }
 
-.hint {
-  margin-top: 1.2rem;
-  font-size: 0.55rem;
-  letter-spacing: 0.08em;
-  color: var(--muted);
-}
-.hint code {
-  font-family: 'Geist Mono', monospace;
-  background: rgba(184, 169, 217, 0.1);
-  padding: 0.15em 0.4em;
-  border-radius: 3px;
-  font-size: 0.9em;
-}
-
 @media (max-width: 768px) {
-  .editor-layout {
-    grid-template-columns: 1fr;
-  }
+  .editor-layout { grid-template-columns: 1fr; }
+  .meta-row { flex-direction: column; }
 }
 </style>

@@ -3,6 +3,10 @@ export default defineNuxtConfig({
   compatibilityDate: '2025-07-15',
   devtools: { enabled: true },
 
+  runtimeConfig: {
+    adminPassword: process.env.ADMIN_PASSWORD || 'admin',
+  },
+
   app: {
     head: {
       link: [
