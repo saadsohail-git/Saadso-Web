@@ -3,81 +3,84 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Muhammad Saad Sohail — Profile</title>
+<title>About — saadso.com</title>
 <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg"/>
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Instrument+Serif:ital@0;1&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;1,9..40,300&display=swap" rel="stylesheet">
-
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;1,300;1,400&family=Geist+Mono:wght@300;400&display=swap" rel="stylesheet"/>
+<link rel="stylesheet" href="/assets/common.css"/>
 <style>
-  :root {
-    --blue: #0755E9;
-    --blue-light: #d4e1fd;
-    --blue-bg: #f0f5ff;
-    --ink: #0f0f0f;
-    --mid: #6b6b6b;
-    --faint: #f3f3f1;
-    --border: #e2e2de;
-    --white: #ffffff;
-  }
-
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-  body {
-    font-family: 'DM Sans', sans-serif;
-    font-size: 16px;
-    line-height: 1.65;
-    color: var(--ink);
-    background: var(--white);
+  .page-wrap {
     max-width: 860px;
     margin: 0 auto;
-    padding: 64px 40px 120px;
+    padding: 48px clamp(1.5rem, 4vw, 2.5rem) 120px;
+    position: relative;
+    z-index: 1;
   }
 
-  .header {
+  /* ── Header ── */
+  .profile-header {
     display: flex;
     justify-content: space-between;
     align-items: flex-end;
     padding-bottom: 32px;
-    border-bottom: 1.5px solid var(--ink);
+    border-bottom: 1px solid var(--lilac-border);
     margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.2s;
   }
 
-  .header-left h1 {
-    font-family: 'Instrument Serif', serif;
-    font-size: 44px;
-    font-weight: 400;
+  .profile-header h1 {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 5vw, 2.75rem);
+    font-weight: 300;
     line-height: 1.1;
     letter-spacing: -0.02em;
     margin-bottom: 8px;
   }
 
-  .header-left .title {
-    font-size: 14px;
+  .profile-header .title {
+    font-size: 0.65rem;
     font-weight: 300;
-    color: var(--mid);
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-  }
-
-  .header-right {
-    text-align: right;
-    font-size: 13px;
-    color: var(--mid);
-    line-height: 1.8;
-  }
-
-  .header-right a {
-    color: var(--blue);
-    text-decoration: none;
-  }
-
-  .section-label {
-    font-size: 11px;
-    font-weight: 500;
+    color: var(--muted);
     letter-spacing: 0.12em;
     text-transform: uppercase;
-    color: var(--mid);
+  }
+
+  .profile-right {
+    text-align: right;
+    font-size: 0.65rem;
+    color: var(--muted);
+    line-height: 1.8;
+    letter-spacing: 0.06em;
+  }
+
+  .profile-right a {
+    color: var(--lilac);
+    text-decoration: none;
+    transition: color 0.22s ease;
+  }
+
+  .profile-right a:hover {
+    color: var(--ink);
+  }
+
+  /* ── Sections ── */
+  section {
+    margin-bottom: 56px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.4s;
+  }
+
+  section:nth-child(3) { animation-delay: 0.5s; }
+  section:nth-child(4) { animation-delay: 0.6s; }
+  section:nth-child(5) { animation-delay: 0.7s; }
+  section:nth-child(6) { animation-delay: 0.8s; }
+
+  .section-label {
+    font-size: 0.58rem;
+    font-weight: 400;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--muted);
     margin-bottom: 20px;
     display: flex;
     align-items: center;
@@ -88,108 +91,66 @@
     content: '';
     flex: 1;
     height: 1px;
-    background: var(--border);
+    background: var(--lilac-border);
   }
 
-  section { margin-bottom: 64px; }
-
+  /* ── About Text ── */
   .about-text {
-    font-family: 'Instrument Serif', serif;
-    font-size: 22px;
-    font-weight: 400;
-    line-height: 1.55;
-    color: var(--ink);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(1.15rem, 2.2vw, 1.35rem);
+    font-weight: 300;
+    line-height: 1.6;
     max-width: 720px;
   }
 
   .about-text em {
     font-style: italic;
-    color: var(--blue);
+    color: var(--lilac);
   }
 
+  /* ── Pillars ── */
   .pillars {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 1px;
-    background: var(--border);
-    border: 1px solid var(--border);
-    margin-top: 32px;
+    background: var(--lilac-border);
+    border: 1px solid var(--lilac-border);
+    margin-top: 28px;
   }
 
   .pillar {
-    background: var(--white);
+    background: var(--bg);
     padding: 24px;
   }
 
   .pillar-num {
-    font-size: 11px;
-    font-weight: 500;
+    font-size: 0.58rem;
+    font-weight: 400;
     letter-spacing: 0.1em;
-    color: var(--blue);
+    color: var(--lilac);
     margin-bottom: 8px;
   }
 
   .pillar-title {
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 6px;
-  }
-
-  .pillar-desc {
-    font-size: 13px;
-    color: var(--mid);
-    line-height: 1.6;
-    font-weight: 300;
-  }
-
-  .highlights { display: flex; flex-direction: column; }
-
-  .highlight-item {
-    display: grid;
-    grid-template-columns: 24px 1fr;
-    gap: 16px;
-    padding: 20px 0;
-    border-bottom: 1px solid var(--border);
-    align-items: start;
-  }
-
-  .highlight-item:first-child { border-top: 1px solid var(--border); }
-
-  .highlight-dot {
-    width: 8px;
-    height: 8px;
-    border-radius: 50%;
-    background: var(--blue);
-    margin-top: 7px;
-  }
-
-  .highlight-title {
-    font-size: 15px;
-    font-weight: 500;
-    margin-bottom: 4px;
-  }
-
-  .highlight-desc {
-    font-size: 13px;
-    color: var(--mid);
-    font-weight: 300;
-    line-height: 1.6;
-  }
-
-  .tag {
-    display: inline-block;
-    background: var(--faint);
-    color: var(--mid);
-    font-size: 11px;
-    padding: 3px 8px;
-    border-radius: 3px;
-    margin-left: 8px;
+    font-size: 0.8rem;
     font-weight: 400;
-    vertical-align: middle;
+    margin-bottom: 6px;
     letter-spacing: 0.02em;
   }
 
-  .timeline { display: flex; flex-direction: column; position: relative; }
+  .pillar-desc {
+    font-size: 0.7rem;
+    color: var(--muted);
+    line-height: 1.7;
+    font-weight: 300;
+  }
+
+  /* ── Timeline ── */
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    position: relative;
+  }
 
   .timeline::before {
     content: '';
@@ -198,7 +159,7 @@
     top: 0;
     bottom: 0;
     width: 1px;
-    background: var(--border);
+    background: var(--lilac-border);
   }
 
   .timeline-item {
@@ -217,20 +178,20 @@
     width: 7px;
     height: 7px;
     border-radius: 50%;
-    background: var(--white);
-    border: 1.5px solid var(--mid);
+    background: var(--bg);
+    border: 1.5px solid var(--muted);
     transform: translateX(-3px);
     z-index: 1;
   }
 
   .timeline-item.active::before {
-    background: var(--blue);
-    border-color: var(--blue);
+    background: var(--lilac);
+    border-color: var(--lilac);
   }
 
   .timeline-year {
-    font-size: 12px;
-    color: var(--mid);
+    font-size: 0.65rem;
+    color: var(--muted);
     font-weight: 300;
     padding-top: 4px;
     text-align: right;
@@ -238,93 +199,169 @@
   }
 
   .timeline-role {
-    font-size: 15px;
-    font-weight: 500;
+    font-size: 0.8rem;
+    font-weight: 400;
     line-height: 1.3;
     margin-bottom: 2px;
+    letter-spacing: 0.02em;
   }
 
   .timeline-org {
-    font-size: 13px;
-    color: var(--mid);
+    font-size: 0.7rem;
+    color: var(--muted);
     font-weight: 300;
     margin-bottom: 6px;
   }
 
-  .timeline-note {
-    font-size: 13px;
-    color: var(--mid);
-    font-weight: 300;
-    line-height: 1.6;
+  .timeline-org a {
+    color: var(--lilac);
+    text-decoration: none;
+    transition: color 0.22s ease;
   }
 
+  .timeline-org a:hover {
+    color: var(--ink);
+  }
+
+  .timeline-note {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .current-badge {
+    display: inline-block;
+    font-size: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--lilac);
+    background: var(--lilac-dim);
+    border: 1px solid var(--lilac-border);
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  .wip {
+    display: inline-block;
+    font-size: 0.5rem;
+    font-weight: 400;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: #c9a84c;
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 6px;
+    vertical-align: middle;
+  }
+
+  /* ── Highlights ── */
+  .highlights {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .highlight-item {
+    display: grid;
+    grid-template-columns: 24px 1fr;
+    gap: 16px;
+    padding: 20px 0;
+    border-bottom: 1px solid var(--lilac-border);
+    align-items: start;
+  }
+
+  .highlight-item:first-child {
+    border-top: 1px solid var(--lilac-border);
+  }
+
+  .highlight-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--lilac);
+    margin-top: 6px;
+  }
+
+  .highlight-title {
+    font-size: 0.8rem;
+    font-weight: 400;
+    margin-bottom: 4px;
+    letter-spacing: 0.02em;
+  }
+
+  .highlight-desc {
+    font-size: 0.7rem;
+    color: var(--muted);
+    font-weight: 300;
+    line-height: 1.7;
+  }
+
+  .tag {
+    display: inline-block;
+    background: var(--lilac-dim);
+    color: var(--muted);
+    font-size: 0.5rem;
+    padding: 2px 7px;
+    border-radius: 3px;
+    margin-left: 6px;
+    font-weight: 400;
+    vertical-align: middle;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Skills ── */
   .skills-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    gap: 32px 40px;
+    gap: 28px 40px;
   }
 
   .skill-group-name {
-    font-size: 12px;
-    font-weight: 500;
-    letter-spacing: 0.06em;
+    font-size: 0.62rem;
+    font-weight: 400;
+    letter-spacing: 0.1em;
     text-transform: uppercase;
-    color: var(--ink);
     margin-bottom: 12px;
   }
 
-  .skill-list { display: flex; flex-wrap: wrap; gap: 6px; }
+  .skill-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
 
   .skill-tag {
-    font-size: 13px;
+    font-size: 0.68rem;
     font-weight: 300;
-    color: var(--mid);
-    border: 1px solid var(--border);
+    color: var(--muted);
+    border: 1px solid var(--lilac-border);
     padding: 4px 12px;
     border-radius: 20px;
   }
 
   .skill-tag.primary {
-    color: var(--blue);
-    border-color: var(--blue-light);
-    background: var(--blue-bg);
+    color: var(--lilac);
+    border-color: rgba(184,169,217,0.3);
+    background: var(--lilac-dim);
   }
 
-  .wip {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #9a6500;
-    background: #fff4d4;
-    border: 1px solid #f0d070;
-    padding: 2px 7px;
-    border-radius: 3px;
-    margin-left: 8px;
-    vertical-align: middle;
+  /* ── Footer override ── */
+  .about-footer {
+    margin-top: 40px;
+    opacity: 0;
+    animation: fadeUp 0.8s ease forwards 0.9s;
   }
 
-  .current-badge {
-    display: inline-block;
-    font-size: 10px;
-    font-weight: 500;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--blue);
-    background: var(--blue-bg);
-    border: 1px solid var(--blue-light);
-    padding: 2px 7px;
-    border-radius: 3px;
-    margin-left: 8px;
-    vertical-align: middle;
-  }
-
+  /* ── Mobile ── */
   @media (max-width: 600px) {
-    body { padding: 40px 24px 80px; }
-    .header { flex-direction: column; align-items: flex-start; gap: 16px; }
-    .header-right { text-align: left; }
-    .header-left h1 { font-size: 34px; }
+    .page-wrap { padding: 32px 1.5rem 80px; }
+    .profile-header { flex-direction: column; align-items: flex-start; gap: 16px; }
+    .profile-right { text-align: left; }
     .pillars { grid-template-columns: 1fr; }
     .skills-grid { grid-template-columns: 1fr; }
     .timeline::before { left: 80px; }
@@ -334,13 +371,34 @@
 </style>
 </head>
 <body>
+<div class="glow"></div>
 
-<div class="header">
-  <div class="header-left">
-    <h1>Saad Sohail</h1>
+<nav class="navbar">
+  <a href="/" class="navbar-logo">
+    <svg viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <path d="M370.362 172.435L371.256 173.064C373.38 177.027 372.798 181.897 369.799 185.248C367.14 187.998 366.806 192.248 369.004 195.379C371.256 198.69 374.6 198.293 378.341 197.267C388.551 194.657 398.14 190.042 406.55 183.692C416.936 175.722 425.759 165.9 432.574 154.721C435.922 149.652 440.471 145.489 445.817 142.604L449.36 145.65C449.36 146.709 449.36 147.802 449.36 148.96C448.172 149.614 447.503 150.926 447.671 152.271C446.396 152.734 445.641 154.049 445.883 155.384L436.447 171.938C431.315 177.5 426.217 183.129 421.052 188.658C418.204 191.671 414.43 194.187 416.085 199.253C415.735 199.341 415.436 199.568 415.258 199.882C412.138 198.04 408.216 198.262 405.325 200.445C402.201 202.9 398.449 204.426 394.498 204.848C391.608 205.127 388.821 206.067 386.353 207.597L384.334 208.027C383.156 207.677 381.881 208.009 381.023 208.888L372.58 209.649C370.759 208.855 368.971 207.994 367.117 207.299C362.846 205.709 359.303 206.239 357.449 211.04L354.8 214.351C349.106 219.416 342.55 223.489 337.716 229.515L324.175 235.143L318.712 235.408C313.745 235.408 310.666 231.832 308.084 228.588C305.501 225.343 303.415 226.038 300.733 227.76C293.549 232.395 288.781 239.414 283.55 245.871C275.67 255.571 269.876 266.762 262.724 276.993C260.109 280.701 260.804 285.668 257.361 288.78C248.388 296.892 240.343 305.997 229.648 312.254C221.692 317.402 211.591 317.907 203.161 313.578C201.009 312.552 198.923 310.268 196.109 311.956C194.122 309.076 192.268 309.109 190.547 312.188C189.984 311.956 189.686 312.188 189.653 312.751C187.146 313.511 185.116 315.36 184.123 317.783C182.692 318.147 181.636 319.361 181.475 320.829C179.718 321.487 178.322 322.858 177.634 324.604C167.701 333.245 155.782 336.821 143.234 338.973C134.427 340.132 125.951 340.033 117.839 335.232C114.35 333.403 110.043 334.538 107.906 337.847C102.112 344.999 94.6628 350.164 88.041 356.587C84.7301 359.898 79.2009 359.898 75.4927 363.209C73.4068 364.964 71.1554 366.52 68.8709 368.076C66.5864 369.632 65.1627 370.029 63.4741 368.076C61.7856 366.123 63.0437 364.765 63.9045 363.11C68.6722 353.177 77.6117 347.217 85.1936 339.933C90.7897 334.196 95.8747 327.981 100.391 321.359C104.364 315.896 103.37 308.38 105.622 301.99C107.603 297.246 107.918 291.971 106.516 287.025C105.777 284.628 106.981 282.062 109.297 281.099C111.692 279.574 114.818 279.874 116.879 281.827C123.453 286.97 125.806 295.857 122.64 303.58C119.329 312.983 125.951 318.28 129.924 324.504C131.844 327.418 135.917 326.623 139.161 325.895C152.604 322.584 164.589 317.121 173.363 306.03C173.694 305.583 174.071 305.172 174.489 304.805C186.474 294.541 182.898 291.197 176.475 280.138C174.061 275.647 171.281 271.361 168.165 267.325C166.186 264.789 165.387 261.527 165.969 258.364C166.551 255.2 168.459 252.436 171.211 250.771C179.007 245.385 187.779 241.573 197.036 239.547C200.265 238.891 203.357 237.681 206.174 235.971C219.782 227.396 234.846 221.8 249.514 215.377C252.519 215.878 255.188 217.589 256.897 220.112C256.897 221.535 256.897 222.992 256.897 224.416L252.096 228.488C250.788 228.62 249.716 229.585 249.448 230.872C247.196 231.303 246.137 233.024 245.408 234.878C241.501 236.799 240.111 240.772 238.025 244.149C236.643 244.934 235.499 246.078 234.714 247.46L219.385 272.358C217.587 273.811 216.29 275.791 215.676 278.019C214.153 278.98 212.63 279.973 212.796 282.125C209.365 285.393 206.382 289.1 203.923 293.15C202.797 295.104 201.406 297.587 204.949 298.911C206.175 300.677 208.346 301.528 210.445 301.063C217.663 303.745 223.258 299.971 228.357 295.965C234.648 290.998 238.952 284.178 243.985 278.019C248.103 273.019 251.76 267.656 254.91 261.995C261.731 249.413 271.465 239.116 280.14 228.058C287.49 218.754 298.648 213.457 305.931 204.021C307.223 202.365 309.441 202.2 311.262 201.372C314.678 201.058 317.951 202.818 319.572 205.842C320.046 208.161 320.158 210.54 319.904 212.894C319.904 215.377 319.506 218.291 322.32 219.516C324.931 220.563 327.919 219.846 329.77 217.728C332.551 215.178 335.266 212.53 338.18 210.146C344.067 205.389 349.143 199.709 353.211 193.327C357.615 186.44 358.078 177.666 363.806 171.408H368.309L370.362 172.435ZM211.438 249.314C209.359 249.138 207.284 249.701 205.578 250.903C199.883 255.211 193.039 257.734 185.911 258.154C183.263 258.353 177.965 258.154 179.819 263.253C181.673 268.593 185.145 273.222 189.752 276.496C194.74 279.94 198.393 279.377 200.711 274.808C204.201 267.403 208.618 260.472 213.855 254.181C214.749 253.155 216.14 251.896 215.411 250.34C214.683 248.784 212.73 249.479 211.538 249.314H211.438Z" fill="currentColor"/>
+    </svg>
+  </a>
+  <div class="navbar-links">
+    <a href="/">Home</a>
+    <a href="/about" class="active">About</a>
+    <a href="/blog">Blog</a>
+    <a href="/links">Cool Links</a>
+    <button class="theme-toggle" aria-label="Toggle theme">
+      <svg class="icon-moon" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M21.752 15.002A9.718 9.718 0 0112.478 24C5.926 24 .597 18.671.597 12.12.597 6.317 4.776 1.47 10.29.378a.75.75 0 01.882.957 7.218 7.218 0 0011.543 8.165.75.75 0 01.963-.123 9.757 9.757 0 01-1.926 5.625z"/></svg>
+      <svg class="icon-sun" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M12 17.5a5.5 5.5 0 100-11 5.5 5.5 0 000 11zm0-14.25a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0V4a.75.75 0 01.75-.75zM12 19.75a.75.75 0 01.75.75v1.5a.75.75 0 01-1.5 0v-1.5a.75.75 0 01.75-.75zM4.575 5.636a.75.75 0 011.06 0l1.061 1.06a.75.75 0 01-1.06 1.061l-1.061-1.06a.75.75 0 010-1.061zm12.728 12.728a.75.75 0 011.061 0l1.06 1.061a.75.75 0 01-1.06 1.06l-1.06-1.06a.75.75 0 010-1.06zM3.25 12a.75.75 0 01.75-.75h1.5a.75.75 0 010 1.5H4a.75.75 0 01-.75-.75zm16.25-.75a.75.75 0 010 1.5h-1.5a.75.75 0 010-1.5h1.5zM5.636 19.425a.75.75 0 010-1.06l1.06-1.061a.75.75 0 111.061 1.06l-1.06 1.061a.75.75 0 01-1.061 0zm12.728-12.728a.75.75 0 010-1.061l1.061-1.06a.75.75 0 111.06 1.06l-1.06 1.061a.75.75 0 01-1.06 0z"/></svg>
+    </button>
+  </div>
+</nav>
+
+<div class="page-wrap">
+
+<div class="profile-header">
+  <div>
+    <h1>Muhammad Saad Sohail</h1>
     <div class="title">Operator &middot; Analyst &middot; Builder</div>
   </div>
-  <div class="header-right">
+  <div class="profile-right">
     Pakistan<br>
     <a href="https://linkedin.com/in/saad--sohail">linkedin.com/in/saad--sohail</a>
   </div>
@@ -349,7 +407,7 @@
 <section>
   <div class="section-label">About</div>
   <p class="about-text">
-    I design processes, build products, and figure out how operations should work
+    I design processes, build products, and figure out how operations should work &mdash;
     across manufacturing, technology, and early-stage companies. I started as a
     <em>mechanical engineer</em>, got pulled into startups, and ended up doing everything
     from product design to acting CEO. Now I run my own company and consult for
@@ -375,7 +433,7 @@
     <div class="pillar">
       <div class="pillar-num">04</div>
       <div class="pillar-title">Entrepreneurship &amp; Venture Building</div>
-      <div class="pillar-desc">Co-founded Tethr (<em>For Talent, By Talent</em>) a Software Services company connecting Pakistani professionals with global clients.</div>
+      <div class="pillar-desc">Co-founded Tethr &mdash; an Employer of Record company connecting Pakistani professionals with global clients. Previously co-founded a YC-backed startup, rising to Acting CEO across 170+ people.</div>
     </div>
   </div>
 </section>
@@ -397,10 +455,17 @@
       <div class="timeline-year">2025 &ndash; Present</div>
       <div class="timeline-body">
         <div class="timeline-role">Co-founder <span class="current-badge">Current</span></div>
-        <div class="timeline-org">
-          <a href="https://tethrhq.com" target="_blank" rel="noopener noreferrer">Tethr</a> <em style="color: #87CEFA;">For Talent, By Talent</em>
-        </div>
-        <div class="timeline-note">Building a software services company that connects Pakistani professionals with US-based clients. Developing the brand, hiring pipeline, onboarding SOPs, and operational infrastructure from the ground up.</div>
+        <div class="timeline-org">Tethr Private Limited</div>
+        <div class="timeline-note">Building an Employer of Record company that connects Pakistani professionals with US-based clients. Developing the brand, hiring pipeline, onboarding SOPs, and operational infrastructure from the ground up.</div>
+      </div>
+    </div>
+
+    <div class="timeline-item active">
+      <div class="timeline-year">2025 &ndash; Present</div>
+      <div class="timeline-body">
+        <div class="timeline-role">Technology Consulting &amp; Execution <span class="wip">WIP</span></div>
+        <div class="timeline-org">Tameer-e-Millat Foundation (Pro Bono)</div>
+        <div class="timeline-note">Strategic and technical engagement with a Pakistani education NGO. Includes full website rebuild, content migration, and technology modernization as part of a broader digital transformation effort.</div>
       </div>
     </div>
 
@@ -409,7 +474,7 @@
       <div class="timeline-body">
         <div class="timeline-role">Co-founder &amp; SVP, Business Operations</div>
         <div class="timeline-org">Cowlar Design Studio (Y Combinator W17)</div>
-        <div class="timeline-note">Routinely served as Acting CEO, overseeing operations, talent, and finances for a 100+ person team. Core member on commercial engagements including a strategic partnership with Qatar's largest retailer valued at 5M+ QAR.</div>
+        <div class="timeline-note">Routinely served as Acting CEO, overseeing operations, talent, and finances for a 170+ person team. Core member on commercial engagements including a strategic partnership with Qatar's largest retailer valued at 5M+ QAR.</div>
       </div>
     </div>
 
@@ -425,7 +490,7 @@
     <div class="timeline-item">
       <div class="timeline-year">2023 &ndash; 2024</div>
       <div class="timeline-body">
-        <div class="timeline-role">Business Operations Associate</div>
+        <div class="timeline-role">Business Operations Associate (CEO Office)</div>
         <div class="timeline-org">Cowlar Design Studio</div>
         <div class="timeline-note">Intensive C-level apprenticeship. Supported the CEO across product, design, commercial, and operations. Transitioned to Co-founder within a year.</div>
       </div>
@@ -440,6 +505,15 @@
       </div>
     </div>
 
+    <div class="timeline-item">
+      <div class="timeline-year">2019 &ndash; 2023</div>
+      <div class="timeline-body">
+        <div class="timeline-role">BE Mechanical Engineering &mdash; GPA 3.82, Rank 5/142</div>
+        <div class="timeline-org">NUST (National University of Sciences &amp; Technology)</div>
+        <div class="timeline-note">Dean's List. President of NUST Automotive Group (100+ members). Winner, Shell Eco-Marathon Pakistan 2021. Founder of Project Sar'at (Formula Student Vehicle).</div>
+      </div>
+    </div>
+
   </div>
 </section>
 
@@ -451,7 +525,31 @@
       <div><div class="highlight-dot"></div></div>
       <div>
         <div class="highlight-title">Acting CEO &mdash; Cowlar Design Studio <span class="tag">Leadership</span></div>
-        <div class="highlight-desc">Served as Acting CEO of a Y Combinator (W17) company, overseeing all operations across Pakistan &mdash; including Operations, Talent, and Finance &mdash; for a team exceeding 100 people.</div>
+        <div class="highlight-desc">Served as Acting CEO of a Y Combinator (W17) company, overseeing all operations across Pakistan &mdash; including Operations, Talent, and Finance &mdash; for a team exceeding 170 people.</div>
+      </div>
+    </div>
+
+    <div class="highlight-item">
+      <div><div class="highlight-dot"></div></div>
+      <div>
+        <div class="highlight-title">Scania / Volkswagen Group &mdash; Manufacturing Intelligence <span class="tag">IoT</span></div>
+        <div class="highlight-desc">Led user discovery with Quality Management and assembly managers at Scania. Proposed and won a contract deploying IoT shot-count sensors on injection mold tooling to track tool health. Projected to save over $300,000 by preventing defects and assembly line stoppages.</div>
+      </div>
+    </div>
+
+    <div class="highlight-item">
+      <div><div class="highlight-dot"></div></div>
+      <div>
+        <div class="highlight-title">Al Meera Gift Card System &mdash; 60+ Stores, 30M+ QAR <span class="tag">Product Design</span></div>
+        <div class="highlight-desc">Designed the full administration portal for a gift card processing system deployed across 60+ stores of Qatar's largest grocery retailer, managing over 30 million QAR in transactions.</div>
+      </div>
+    </div>
+
+    <div class="highlight-item">
+      <div><div class="highlight-dot"></div></div>
+      <div>
+        <div class="highlight-title">Quote-to-Cash Process Redesign <span class="tag">Business Analysis</span></div>
+        <div class="highlight-desc">Redesigning end-to-end Quote-to-Cash workflows for a PE-backed Engineer-to-Order manufacturer. Completed current-state assessment across 10 functional swim lanes (SIPOC + BPMN) and a 49-item pain point inventory. Now leading future-state design, replacing manual email handoffs with system-triggered automation across ERP, CRM, and engineering systems.</div>
       </div>
     </div>
 
@@ -474,16 +572,16 @@
     <div class="highlight-item">
       <div><div class="highlight-dot"></div></div>
       <div>
-        <div class="highlight-title">Al Meera Gift Card System &mdash; 60+ Stores, 30M+ QAR <span class="tag">Product Design</span></div>
-        <div class="highlight-desc">Designed the full administration portal for a gift card processing system deployed across 60+ stores of Qatar's largest grocery retailer, managing over 30 million QAR in transactions.</div>
+        <div class="highlight-title">ConteQ Expo, Doha &mdash; Pitched to Qatar Prime Minister <span class="tag">Commercial</span></div>
+        <div class="highlight-desc">Managed deployment of 10 Smart Carts and 2 Self-Checkout stations at a 3-day live Smart Store at Qatar's ConteQ Expo, and pitched products to high-profile attendees including the Prime Minister of Qatar.</div>
       </div>
     </div>
 
     <div class="highlight-item">
       <div><div class="highlight-dot"></div></div>
       <div>
-        <div class="highlight-title">Scania / Volkswagen Group &mdash; Manufacturing Intelligence <span class="tag">IoT &middot; Manufacturing</span></div>
-        <div class="highlight-desc">Led user discovery with Quality Management and assembly managers at Scania. Proposed and won a contract deploying IoT shot-count sensors on injection mold tooling to track tool health. Projected to save over $300,000 by preventing defects and assembly line stoppages.</div>
+        <div class="highlight-title">viaPhoton Manufacturing Data Portal <span class="tag">Delivery</span></div>
+        <div class="highlight-desc">Conducted user research with an industrial automation client in Aurora, Illinois, then led a three-person dev team to build a web portal that eliminated faulty contractor test data issues, saving 5+ hours weekly.</div>
       </div>
     </div>
 
@@ -512,6 +610,7 @@
         <span class="skill-tag">Process Mapping</span>
         <span class="skill-tag">Workflow Automation</span>
         <span class="skill-tag">ERP Systems</span>
+        <span class="skill-tag">SIOP</span>
       </div>
     </div>
 
@@ -525,7 +624,7 @@
         <span class="skill-tag">SDLC</span>
         <span class="skill-tag">Competitive Analysis</span>
         <span class="skill-tag">QA</span>
-        <span class="skill-tag">Blender</span>
+        <span class="skill-tag">Blender / 3D</span>
       </div>
     </div>
 
@@ -545,12 +644,12 @@
     <div class="skill-group">
       <div class="skill-group-name">Tools &amp; Technical</div>
       <div class="skill-list">
+        <span class="skill-tag primary">Salesforce</span>
         <span class="skill-tag primary">HubSpot</span>
         <span class="skill-tag primary">Lucidchart</span>
         <span class="skill-tag">Jira</span>
         <span class="skill-tag">Miro / FigJam</span>
-        <span class="skill-tag">Notion</span>
-        <span class="skill-tag">Anytype</span>
+        <span class="skill-tag">Notion / Anytype</span>
         <span class="skill-tag">Python</span>
         <span class="skill-tag">HTML / CSS</span>
         <span class="skill-tag">SQL</span>
@@ -561,5 +660,39 @@
   </div>
 </section>
 
+<footer class="about-footer">
+  <span class="footer-copy">saadso.com &nbsp;&middot;&nbsp; &copy; 2026</span>
+  <div class="footer-links">
+    <a href="https://www.linkedin.com/in/saad--sohail/" target="_blank" rel="noopener" aria-label="LinkedIn">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+      </svg>
+      LinkedIn
+    </a>
+    <a href="https://github.com/saadsohail-git" target="_blank" rel="noopener" aria-label="GitHub">
+      <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+        <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+      </svg>
+      GitHub
+    </a>
+  </div>
+</footer>
+
+</div>
+
+<script>
+  (function () {
+    var root = document.documentElement;
+    var saved = localStorage.getItem('theme');
+    if (saved === 'light') root.classList.add('light');
+
+    document.querySelectorAll('.theme-toggle').forEach(function (btn) {
+      btn.addEventListener('click', function () {
+        root.classList.toggle('light');
+        localStorage.setItem('theme', root.classList.contains('light') ? 'light' : 'dark');
+      });
+    });
+  })();
+</script>
 </body>
 </html>
