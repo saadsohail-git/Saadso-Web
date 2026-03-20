@@ -1,5 +1,22 @@
 <template>
   <div class="admin-page">
+    <!-- Password gate -->
+    <div v-if="!authenticated" class="auth-gate">
+      <h1>Admin</h1>
+      <div class="auth-form">
+        <input
+          v-model="password"
+          type="password"
+          placeholder="Password"
+          class="auth-input"
+          @keyup.enter="authenticate"
+        />
+        <button class="btn" @click="authenticate">Enter</button>
+      </div>
+      <p v-if="authError" class="error-msg">Wrong password</p>
+    </div>
+
+    <div v-else>
     <div class="admin-header">
       <h1>{{ editing ? 'Edit' : 'Write' }}</h1>
       <div class="admin-actions">
@@ -90,6 +107,7 @@
         </div>
       </div>
     </div>
+    </div> <!-- end v-else -->
   </div>
 </template>
 
@@ -98,11 +116,27 @@ import { marked } from 'marked'
 
 useHead({ title: 'Admin — saadso.com' })
 
-// Password (only asked when publishing/deleting)
+// Auth gate
+const authenticated = ref(false)
+const authError = ref(false)
+
+// Password (stored after gate, reused for publish/delete)
 const password = ref('')
 const needsPassword = ref(false)
 const pendingAction = ref('')
 let pendingCallback = null
+
+async function authenticate() {
+  if (!password.value) return
+  try {
+    await $fetch('/api/auth', { method: 'POST', body: { password: password.value } })
+    authenticated.value = true
+    authError.value = false
+    await loadPosts()
+  } catch {
+    authError.value = true
+  }
+}
 
 // Post fields
 const title = ref('')
@@ -140,7 +174,7 @@ const renderedHtml = computed(() => {
 })
 
 // Load posts on mount
-onMounted(loadPosts)
+// Posts loaded after auth
 
 async function loadPosts() {
   loadingPosts.value = true
@@ -284,6 +318,27 @@ function copyMarkdown() {
   min-height: calc(100vh - 60px);
   position: relative;
   z-index: 1;
+}
+
+/* Auth gate */
+.auth-gate {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 1.5rem;
+}
+.auth-gate h1 {
+  font-family: 'Cormorant Garamond', serif;
+  font-weight: 300;
+  font-size: clamp(2rem, 5vw, 3rem);
+  letter-spacing: -0.02em;
+}
+.error-msg {
+  font-size: 0.58rem;
+  color: #e57373;
+  letter-spacing: 0.08em;
 }
 
 /* Header */
