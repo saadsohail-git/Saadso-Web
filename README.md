@@ -4,8 +4,8 @@ Personal website for Muhammad Saad Sohail.
 
 ## Structure
 
-- `index.html` — Landing page
-- `about/index.html` — Profile / about page
+- `index.html` — Home page
+- `about.html` — About page
 - `assets/` — Brand assets (favicon, symbol SVGs)
 
 ## Deployment
