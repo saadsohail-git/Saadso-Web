@@ -7,7 +7,7 @@
       <NuxtLink to="/" :class="{ active: route.path === '/' }">Home</NuxtLink>
       <NuxtLink to="/about" :class="{ active: route.path === '/about' }">About</NuxtLink>
       <NuxtLink to="/blog" :class="{ active: route.path === '/blog' }">Blog</NuxtLink>
-      <NuxtLink to="/links" :class="{ active: route.path === '/links' }">Cool Links</NuxtLink>
+      <NuxtLink to="/links" :class="{ active: route.path === '/links' }">Links</NuxtLink>
       <ThemeToggle />
     </div>
   </nav>

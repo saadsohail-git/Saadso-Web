@@ -6,7 +6,7 @@
 </template>
 
 <script setup>
-useHead({ title: 'Cool Links — saadso.com' })
+useHead({ title: 'Links — saadso.com' })
 </script>
 
 <style scoped>

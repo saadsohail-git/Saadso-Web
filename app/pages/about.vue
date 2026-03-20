@@ -2,7 +2,7 @@
   <div class="page-wrap">
     <div class="profile-header">
       <div>
-        <h1>Saad Sohail</h1>
+        <h1 class="name-row">Saad Sohail <img :src="'/full-name.svg'" alt="Saad Sohail signature" class="name-svg" /></h1>
         <div class="title">Operator &middot; Analyst &middot; Builder</div>
       </div>
       <div class="profile-right">
@@ -257,6 +257,23 @@ useHead({ title: 'About — saadso.com' })
   margin-bottom: 8px;
 }
 
+.name-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.name-svg {
+  height: calc(clamp(2rem, 5vw, 2.75rem) * 1.65);
+  width: auto;
+  opacity: 0.7;
+  transition: opacity 0.22s ease, filter 0.22s ease;
+}
+
+.name-row:hover .name-svg {
+  opacity: 1;
+}
+
 .profile-header .title {
   font-size: 0.65rem;
   font-weight: 300;
@@ -371,5 +388,11 @@ section:nth-child(6) { animation-delay: 0.8s; }
   .timeline::before { left: 80px; }
   .timeline-item { grid-template-columns: 80px 1fr; }
   .timeline-item::before { left: 80px; }
+}
+</style>
+
+<style>
+.light .name-svg {
+  filter: invert(1);
 }
 </style>
