@@ -20,3 +20,5 @@ npm run dev
 ## Deployment
 
 Static site generated with `nuxt generate` and deployed via nginx on a Hetzner VPS. Push to `main` triggers CI/CD automatically.
+
+blog time as well now
