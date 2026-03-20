@@ -28,6 +28,7 @@ node_modules/
 dist/
 .nitro/
 .cache/
+.data/
 
 # Logs
 *.log
