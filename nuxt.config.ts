@@ -4,7 +4,7 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
 
   runtimeConfig: {
-    adminPassword: process.env.ADMIN_PASSWORD || 'admin',
+    adminPassword: (globalThis as any)?.process?.env?.ADMIN_PASSWORD || 'sui',
   },
 
   app: {
