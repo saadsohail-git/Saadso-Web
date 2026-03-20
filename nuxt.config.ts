@@ -9,6 +9,12 @@ export default defineNuxtConfig({
 
   app: {
     head: {
+      script: [
+        {
+          innerHTML: `if(localStorage.getItem('theme')==='dark')document.documentElement.classList.add('dark')`,
+          tagPosition: 'head',
+        },
+      ],
       link: [
         { rel: 'icon', type: 'image/svg+xml', href: '/favicon.svg' },
         { rel: 'preconnect', href: 'https://fonts.googleapis.com' },
