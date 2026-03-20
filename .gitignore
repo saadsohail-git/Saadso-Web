@@ -19,8 +19,15 @@ Thumbs.db
 .env
 .env.*
 
-# Node (if ever added)
+# Node
 node_modules/
+
+# Nuxt
+.nuxt/
+.output/
+dist/
+.nitro/
+.cache/
 
 # Logs
 *.log

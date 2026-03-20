@@ -17,6 +17,18 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Generate static site
+        run: npx nuxt generate
+
       - name: Deploy via rsync
         env:
           SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
@@ -28,9 +40,5 @@ jobs:
           ssh-keyscan -H "$HOST" >> ~/.ssh/known_hosts 2>/dev/null
 
           rsync -avz --delete \
-            --exclude='.git' \
-            --exclude='.github' \
-            --exclude='.claude' \
-            --exclude='README.md' \
             -e "ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no" \
-            ./ root@${HOST}:/var/www/html/
+            .output/public/ root@${HOST}:/var/www/html/

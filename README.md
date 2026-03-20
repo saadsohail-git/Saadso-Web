@@ -1,18 +1,22 @@
 # saadso.com
 
-Personal website for Muhammad Saad Sohail.
+Personal website for Muhammad Saad Sohail. Built with Nuxt 3.
 
 ## Structure
 
-- `index.html` — Home page
-- `about.html` — About page
-- `assets/` — Brand assets (favicon, symbol SVGs)
+- `app/pages/` — Page routes (index, about, blog, links)
+- `app/components/` — Shared components (Navbar, Footer, ThemeToggle, Logo)
+- `app/layouts/` — Default layout
+- `app/assets/css/` — Global styles
+- `public/` — Static assets (favicon, symbol SVGs)
+
+## Development
+
+```bash
+npm install
+npm run dev
+```
 
 ## Deployment
 
-Static site served via nginx on a Hetzner VPS. Sync files with:
-
-```bash
-rsync -avz --exclude='.git' --exclude='.claude' --exclude='.github' \
-  -e "ssh -i ~/.ssh/hetzner_key" ./ root@77.42.90.166:/var/www/html/
-```
+Static site generated with `nuxt generate` and deployed via nginx on a Hetzner VPS. Push to `main` triggers CI/CD automatically.
