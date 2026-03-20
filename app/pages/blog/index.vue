@@ -8,8 +8,8 @@
     <div v-if="posts?.length" class="post-list">
       <NuxtLink
         v-for="post in posts"
-        :key="post.path"
-        :to="post.path"
+        :key="post.slug"
+        :to="`/blog/${post.slug}`"
         class="post-card"
       >
         <time>{{ formatDate(post.date) }}</time>
@@ -29,9 +29,7 @@
 <script setup>
 useHead({ title: 'Blog — saadso.com' })
 
-const { data: posts } = await useAsyncData('blog-list', () =>
-  queryCollection('blog').order('date', 'DESC').all()
-)
+const { data: posts } = await useAsyncData('blog-list', () => $fetch('/api/blog'))
 
 function formatDate(dateStr) {
   if (!dateStr) return ''

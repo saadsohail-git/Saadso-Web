@@ -6,19 +6,20 @@
         <time>{{ formatDate(post.date) }}</time>
         <h1>{{ post.title }}</h1>
       </header>
-      <div class="prose">
-        <ContentRenderer :value="post" />
-      </div>
+      <div class="prose" v-html="renderedContent" />
     </article>
     <SiteFooter />
   </div>
 </template>
 
 <script setup>
-const route = useRoute()
+import { marked } from 'marked'
 
-const { data: post } = await useAsyncData(`blog-${route.path}`, () =>
-  queryCollection('blog').path(route.path).first()
+const route = useRoute()
+const slug = Array.isArray(route.params.slug) ? route.params.slug.join('/') : (route.params.slug || '')
+
+const { data: post } = await useAsyncData(`blog-${slug}`, () =>
+  $fetch(`/api/blog/${slug}`)
 )
 
 if (!post.value) {
@@ -26,6 +27,10 @@ if (!post.value) {
 }
 
 useHead({ title: `${post.value?.title ?? 'Post'} — saadso.com` })
+
+const renderedContent = computed(() =>
+  post.value?.content ? marked.parse(post.value.content) : ''
+)
 
 function formatDate(dateStr) {
   if (!dateStr) return ''
