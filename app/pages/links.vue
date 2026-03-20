@@ -29,7 +29,6 @@
           Cancel
         </button>
       </div>
-      <div class="password-hint">Password is <span class="password-code">sui</span></div>
     </div>
 
     <div class="canvas-wrapper">
