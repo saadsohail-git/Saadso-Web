@@ -42,13 +42,15 @@ jobs:
 
           SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no"
 
-          # Sync the built app + content to the server
+          # Sync the built app to the server (preserve runtime-created content and uploads)
           rsync -avz --delete \
             --exclude='content/blog' \
+            --exclude='content/zikr.json' \
+            --exclude='public/uploads' \
             -e "$SSH_CMD" \
             .output/ root@${HOST}:/var/www/saadso/
 
-          # Sync content separately (don't delete server-created posts)
+          # Sync content separately (don't delete server-created posts or zikr entries)
           rsync -avz \
             -e "$SSH_CMD" \
             content/ root@${HOST}:/var/www/saadso/content/
