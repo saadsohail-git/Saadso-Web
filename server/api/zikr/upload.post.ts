@@ -1,14 +1,11 @@
 import { writeFile, mkdir } from 'fs/promises'
 import { join, extname } from 'path'
-import { existsSync } from 'fs'
 
-function getPublicUploadsDir(): string {
-  const cwd = process.cwd()
-  const outputPublic = join(cwd, '.output', 'public')
-  if (existsSync(outputPublic)) {
-    return join(outputPublic, 'uploads', 'zikr')
+function getUploadsDir(): string {
+  if (process.env.NODE_ENV === 'production') {
+    return '/var/www/saadso-uploads/zikr'
   }
-  return join(cwd, 'public', 'uploads', 'zikr')
+  return join(process.cwd(), 'public', 'uploads', 'zikr')
 }
 
 export default defineEventHandler(async (event) => {
@@ -28,7 +25,7 @@ export default defineEventHandler(async (event) => {
 
   const ext = extname(filePart.filename || '').toLowerCase() || '.jpg'
   const safeName = `${Date.now()}${ext}`
-  const uploadsDir = getPublicUploadsDir()
+  const uploadsDir = getUploadsDir()
 
   await mkdir(uploadsDir, { recursive: true })
   await writeFile(join(uploadsDir, safeName), filePart.data)

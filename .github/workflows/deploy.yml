@@ -34,6 +34,7 @@ jobs:
           SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
           HOST: ${{ secrets.VPS_HOST }}
           ADMIN_PASSWORD: ${{ secrets.ADMIN_PASSWORD }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
         run: |
           mkdir -p ~/.ssh
           echo "$SSH_KEY" > ~/.ssh/deploy_key
@@ -42,15 +43,13 @@ jobs:
 
           SSH_CMD="ssh -i ~/.ssh/deploy_key -o StrictHostKeyChecking=no"
 
-          # Sync the built app to the server (preserve runtime-created content and uploads)
+          # Sync the built app to the server (preserve blog posts, uploads dir)
           rsync -avz --delete \
             --exclude='content/blog' \
-            --exclude='content/zikr.json' \
-            --exclude='public/uploads' \
             -e "$SSH_CMD" \
             .output/ root@${HOST}:/var/www/saadso/
 
-          # Sync content separately (don't delete server-created posts or zikr entries)
+          # Sync content separately (additive, preserves server-created posts)
           rsync -avz \
             -e "$SSH_CMD" \
             content/ root@${HOST}:/var/www/saadso/content/
@@ -60,16 +59,46 @@ jobs:
             -e "$SSH_CMD" \
             package.json package-lock.json root@${HOST}:/var/www/saadso/
 
-          # Install production deps, set env, restart the server
-          $SSH_CMD root@${HOST} << 'REMOTE'
+          # Remote setup: Postgres, nginx uploads dir, env, PM2
+          $SSH_CMD root@${HOST} /bin/bash << REMOTE
+            set -e
+
+            # ── Postgres ──────────────────────────────────────────────
+            if ! dpkg -l postgresql 2>/dev/null | grep -q '^ii'; then
+              apt-get update -q
+              apt-get install -y postgresql
+            fi
+            systemctl is-active --quiet postgresql || systemctl start postgresql
+
+            # Parse DB credentials from DATABASE_URL (postgres://user:pass@host/db)
+            DB_URL="${DATABASE_URL}"
+            DB_USER=\$(echo "\$DB_URL" | sed 's|postgres://||' | cut -d: -f1)
+            DB_PASS=\$(echo "\$DB_URL" | sed 's|postgres://[^:]*:||' | cut -d@ -f1)
+            DB_NAME=\$(echo "\$DB_URL" | sed 's|.*/||')
+
+            sudo -u postgres psql -tc "SELECT 1 FROM pg_roles WHERE rolname='\$DB_USER'" | grep -q 1 || \
+              sudo -u postgres psql -c "CREATE USER \$DB_USER WITH PASSWORD '\$DB_PASS';"
+
+            sudo -u postgres psql -lqt | cut -d'|' -f1 | grep -qw "\$DB_NAME" || \
+              sudo -u postgres psql -c "CREATE DATABASE \$DB_NAME OWNER \$DB_USER;"
+
+            # ── Uploads directory (served by nginx) ───────────────────
+            mkdir -p /var/www/saadso-uploads/zikr
+
+            # ── Nginx: add /uploads/ location if not present ──────────
+            NGINX_CONF=\$(nginx -T 2>/dev/null | grep -l 'saadso' /etc/nginx/sites-enabled/* 2>/dev/null | head -1 || echo "/etc/nginx/sites-enabled/saadso")
+            if [ -f "\$NGINX_CONF" ] && ! grep -q 'saadso-uploads' "\$NGINX_CONF"; then
+              sed -i '/location \/ {/i \    location /uploads/ {\n        alias /var/www/saadso-uploads/;\n        expires 30d;\n        add_header Cache-Control "public, immutable";\n    }\n' "\$NGINX_CONF"
+              nginx -t && nginx -s reload
+            fi
+
+            # ── App env + deps ─────────────────────────────────────────
             cd /var/www/saadso
             npm ci --production 2>/dev/null || true
-            echo "ADMIN_PASSWORD=${ADMIN_PASSWORD}" > .env
+            printf 'ADMIN_PASSWORD=%s\nDATABASE_URL=%s\n' "${ADMIN_PASSWORD}" "${DATABASE_URL}" > .env
 
-            # Install PM2 if not present
+            # ── PM2 ───────────────────────────────────────────────────
             command -v pm2 >/dev/null || npm install -g pm2
-
-            # Start or restart the Nuxt server
             pm2 describe saadso >/dev/null 2>&1 && pm2 restart saadso || pm2 start server/index.mjs --name saadso
             pm2 save
-          REMOTE
+REMOTE

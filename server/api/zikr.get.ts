@@ -1,12 +1,14 @@
-import { readFile } from 'fs/promises'
-import { join } from 'path'
-
 export default defineEventHandler(async () => {
-  const filePath = join(process.cwd(), 'content', 'zikr.json')
-  try {
-    const raw = await readFile(filePath, 'utf-8')
-    return JSON.parse(raw)
-  } catch {
-    return []
-  }
+  const sql = getDb()
+  const rows = await sql`
+    SELECT id, arabic, translation, image_url, sort_order
+    FROM zikr_entries
+    ORDER BY sort_order ASC, created_at ASC
+  `
+  return rows.map(r => ({
+    id: r.id,
+    arabic: r.arabic,
+    translation: r.translation,
+    image: r.image_url,
+  }))
 })

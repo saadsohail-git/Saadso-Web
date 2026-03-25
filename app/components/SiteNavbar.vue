@@ -8,7 +8,6 @@
       <NuxtLink to="/about" :class="{ active: route.path === '/about' }">About</NuxtLink>
       <NuxtLink to="/blog" :class="{ active: route.path.startsWith('/blog') }">Blog</NuxtLink>
       <NuxtLink to="/links" :class="{ active: route.path === '/links' }">Links</NuxtLink>
-      <NuxtLink to="/arabic" :class="{ active: route.path === '/arabic' }">Arabic</NuxtLink>
       <ThemeToggle />
     </div>
   </nav>

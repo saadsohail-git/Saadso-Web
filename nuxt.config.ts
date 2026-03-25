@@ -5,6 +5,7 @@ export default defineNuxtConfig({
 
   runtimeConfig: {
     adminPassword: (globalThis as any)?.process?.env?.ADMIN_PASSWORD || 'sui',
+    databaseUrl: (globalThis as any)?.process?.env?.DATABASE_URL || '',
   },
 
   app: {

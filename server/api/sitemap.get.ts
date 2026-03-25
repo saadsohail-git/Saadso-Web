@@ -1,0 +1,82 @@
+export default defineEventHandler(() => {
+  return [
+    {
+      method: 'POST',
+      path: '/api/auth',
+      auth: false,
+      description: 'Verify admin password. Returns { ok: true } or 401.',
+      body: '{ password: string }',
+    },
+    {
+      method: 'GET',
+      path: '/api/blog',
+      auth: false,
+      description: 'List all blog posts sorted by date descending.',
+      returns: '{ slug, title, description, date }[]',
+    },
+    {
+      method: 'POST',
+      path: '/api/blog',
+      auth: true,
+      description: 'Publish or update a blog post.',
+      body: '{ password, slug, title, description, date, tags, content }',
+    },
+    {
+      method: 'DELETE',
+      path: '/api/blog',
+      auth: true,
+      description: 'Delete a blog post by slug.',
+      body: '{ password, slug }',
+    },
+    {
+      method: 'GET',
+      path: '/api/blog/[slug]',
+      auth: false,
+      description: 'Fetch a single blog post with full markdown body.',
+      returns: '{ slug, title, description, date, content }',
+    },
+    {
+      method: 'GET',
+      path: '/api/links',
+      auth: false,
+      description: 'Read the links canvas markdown file.',
+      returns: 'string (raw markdown)',
+    },
+    {
+      method: 'POST',
+      path: '/api/links',
+      auth: true,
+      description: 'Write the links canvas markdown file.',
+      body: '{ password, content }',
+    },
+    {
+      method: 'GET',
+      path: '/api/zikr',
+      auth: false,
+      description: 'List all zikr entries from Postgres.',
+      returns: '{ id, arabic, translation, image }[]',
+    },
+    {
+      method: 'POST',
+      path: '/api/zikr',
+      auth: true,
+      description: 'Save or delete a zikr entry.',
+      body: '{ password, action: "save"|"delete", entry?: ZikrEntry, id?: string }',
+    },
+    {
+      method: 'POST',
+      path: '/api/zikr/upload',
+      auth: true,
+      description: 'Upload an image for a zikr entry. Returns the public URL.',
+      body: 'multipart/form-data: { file, password }',
+      returns: '{ url: string }',
+    },
+    {
+      method: 'GET',
+      path: '/api/sitemap',
+      auth: false,
+      description: 'This endpoint. Returns a JSON list of all API routes.',
+      returns: 'Route[]',
+    },
+  ]
+})
